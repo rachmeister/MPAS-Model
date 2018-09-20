@@ -398,7 +398,7 @@ contains
       real (kind=RKIND), dimension(:), pointer :: latentHeatFlux, sensibleHeatFlux, longWaveHeatFluxUp, longWaveHeatFluxDown, &
                                                   seaIceHeatFlux, evaporationFlux, riverRunoffFlux
       real (kind=RKIND), dimension(:), pointer :: seaIceFreshWaterFlux, seaIceSalinityFlux, iceRunoffFlux
-      real (kind=RKIND), dimension(:), pointer :: shortWaveHeatFlux, penetrativeTemperatureFlux
+      real (kind=RKIND), dimension(:), pointer :: shortWaveHeatFlux, penetrativeTemperatureFlux, diurnalCycleFraction
       real (kind=RKIND), dimension(:), pointer :: snowFlux, rainFlux
       real (kind=RKIND) :: requiredSalt, allowedSalt
 
@@ -426,6 +426,7 @@ contains
       call mpas_pool_get_array(forcingPool, 'iceRunoffFlux', iceRunoffFlux)
       call mpas_pool_get_array(forcingPool, 'riverRunoffFlux', riverRunoffFlux)
       call mpas_pool_get_array(forcingPool, 'penetrativeTemperatureFlux', penetrativeTemperatureFlux)
+      call mpas_pool_get_array(forcingPool, 'diurnalCycleFraction', diurnalCycleFraction)
 
       nCells = nCellsArray( 3 )
 
@@ -493,7 +494,7 @@ contains
       ! convert short wave heat flux to a temperature flux
       !$omp do schedule(runtime)
       do iCell = 1, nCells
-         penetrativeTemperatureFlux(iCell) = shortWaveHeatFlux(iCell) * hflux_factor
+         penetrativeTemperatureFlux(iCell) = diurnalCycleFraction(iCell) * shortWaveHeatFlux(iCell) * hflux_factor
       end do
       !$omp end do
 

@@ -65,7 +65,7 @@ contains
 !>  time of day to represent a diurnal cycle
 !
 !-----------------------------------------------------------------------
-   subroutine ocn_diurnal_cycle(meshPool, forcingPool, tod, ierr) !{{{
+   subroutine ocn_diurnal_cycle(meshPool, forcingPool, tod)!{{{
 
       !-----------------------------------------------------------------
       !
@@ -83,23 +83,29 @@ contains
       !-----------------------------------------------------------------
 
       type (mpas_pool_type) :: forcingPool
-      integer, intent(out) :: ierr
 
       real (kind=RKIND), dimension(:), pointer :: diurnalCycleFraction
       integer :: nCells, iCell
       integer, dimension(:), pointer :: nCellsArray
+      logical, pointer :: config_use_idealized_diurnal_cycle
 
       call mpas_pool_get_array(forcingPool, 'diurnalCycleFraction', diurnalCycleFraction)
       call mpas_pool_get_dimension(meshPool, 'nCellsArray', nCellsArray)
+      call MPAS_pool_get_config(ocnConfigs, 'config_use_idealized_diurnal_cycle', config_use_idealized_diurnal_cycle)
 
       nCells = nCellsArray( size(nCellsArray) )
 
-      !$omp do schedule(runtime)
-      do iCell = 1, nCells
-         arg1 = cos(2.0_r8*pii*(tod - 0.5_r8))
-         diurnalCycleFraction(iCell) = max(arg1,0.0_r8)
-      enddo
-      !$omp end do
+      if(config_use_idealized_diurnal_cycle) then
+        !$omp do schedule(runtime)
+        do iCell = 1, nCells
+           arg1 = cos(2.0_RKIND*pii*(tod - 0.5_RKIND))
+           diurnalCycleFraction(iCell) = max(arg1,0.0_RKIND)
+        enddo
+        !$omp end do
+      else
+        diurnalCycleFraction(:) = 1.0_RKIND
+      endif
+
     end subroutine ocn_diurnal_cycle!}}}
 !***********************************************************************
 !

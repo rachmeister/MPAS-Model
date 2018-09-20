@@ -580,11 +580,11 @@ module ocn_forward_mode
            call ocn_frazil_forcing_build_arrays(domain, meshPool, forcingPool, diagnosticsPool, statePool, err)
 
            call mpas_get_time(curr_time=currTime, H=hour, M=minute, S=second, ierr=ierr)
-           mn_h = float(minute)/60.0_r8
-           sec_h = float(second)/3600.0_r8
+           mn_h = float(minute)/60.0_RKIND
+           sec_h = float(second)/3600.0_RKIND
            hr_h = float(hour) + mn_h + sec_h
-           tod = hr_h / 24.0_r8
-           call ocn_diurnal_cycle(meshPool, forcingPool, tod, ierr)
+           tod = hr_h / 24.0_RKIND
+           call ocn_diurnal_cycle(meshPool, forcingPool, tod)
 
            block_ptr => block_ptr % next
          end do
