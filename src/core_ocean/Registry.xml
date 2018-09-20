@@ -2746,8 +2746,10 @@
 			 description="Short wave flux at cell centers from coupler. Positive into the ocean."
 			 packages="activeTracersBulkRestoringPKG;ecosysTracersPKG"
 		/>
-
-
+    <var name="diurnalCycleFraction" type="real" dimensions="nCells Time" units="None"
+       description="non-dimensional fraction representing diurnalcycle, values {0,1}"
+       packages="activeTracersBulkRestoringPKG;ecosysTracersPKG"
+    />
 		<!-- Coupling fields associated with mass or salinity fluxes -->
 		<var name="evaporationFlux" type="real" dimensions="nCells Time" units="kg m^{-2} s^{-1}"
 			 description="Evaporation flux at cell centers from coupler. Positive into the ocean."

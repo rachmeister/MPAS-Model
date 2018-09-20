@@ -469,6 +469,9 @@ module ocn_forward_mode
       character(len=StrKIND) :: timeStamp
       integer :: ierr, err_tmp
 
+      integer :: hour, minute, second
+      real (kind=RKIND) :: tod, sec_h, hr_h, mn_h
+
       type (mpas_pool_type), pointer :: averagePool
       type (mpas_pool_type), pointer :: meshPool
       type (mpas_pool_type), pointer :: statePool
@@ -576,6 +579,13 @@ module ocn_forward_mode
 
            call ocn_frazil_forcing_build_arrays(domain, meshPool, forcingPool, diagnosticsPool, statePool, err)
 
+           call mpas_get_time(curr_time=currTime, H=hour, M=minute, S=second, ierr=ierr)
+           mn_h = float(minute)/60.0_r8
+           sec_h = float(second)/3600.0_r8
+           hr_h = float(hour) + mn_h + sec_h
+           tod = hr_h / 24.0_r8
+           call ocn_diurnal_cycle(meshPool, forcingPool, tod, ierr)
+
            block_ptr => block_ptr % next
          end do
 
@@ -655,6 +665,7 @@ module ocn_forward_mode
          ! read next time level data required for variable shortwave
          call mpas_timer_start('io_shortwave',.false.)
          call ocn_get_shortWaveData(domain % streamManager, domain, domain % clock, .false.)
+
          call mpas_timer_stop('io_shortwave')
 
          ! read next time level data required for ecosys forcing

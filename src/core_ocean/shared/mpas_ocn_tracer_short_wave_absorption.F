@@ -19,6 +19,7 @@ module ocn_tracer_short_wave_absorption
    use ocn_constants
    use ocn_tracer_short_wave_absorption_jerlov
    use ocn_tracer_short_wave_absorption_variable
+   use mpas_constants
 
    implicit none
    private
@@ -37,7 +38,8 @@ module ocn_tracer_short_wave_absorption
    !--------------------------------------------------------------------
 
    public :: ocn_tracer_short_wave_absorption_tend, &
-             ocn_tracer_short_wave_absorption_init
+             ocn_tracer_short_wave_absorption_init, &
+             ocn_diurnal_cycle
 
    !--------------------------------------------------------------------
    !
@@ -51,6 +53,54 @@ module ocn_tracer_short_wave_absorption
 
 contains
 
+!***********************************************************************
+!
+!  routine ocn_diurnal_cycle
+!
+!> \brief   Computes an idealized diurnal cycle 
+!> \author  Luke Van Roekel
+!> \date    9/20/2018
+!> \details
+!>  This routine returns a fraction between zero and one depending on the
+!>  time of day to represent a diurnal cycle
+!
+!-----------------------------------------------------------------------
+   subroutine ocn_diurnal_cycle(meshPool, forcingPool, tod, ierr) !{{{
+
+      !-----------------------------------------------------------------
+      !
+      ! input variables
+      !
+      !-----------------------------------------------------------------
+
+      type (mpas_pool_type), intent(in) :: meshPool
+      real (kind=RKIND) :: tod, arg1
+
+      !-----------------------------------------------------------------
+      !
+      ! output variables
+      !
+      !-----------------------------------------------------------------
+
+      type (mpas_pool_type) :: forcingPool
+      integer, intent(out) :: ierr
+
+      real (kind=RKIND), dimension(:), pointer :: diurnalCycleFraction
+      integer :: nCells, iCell
+      integer, dimension(:), pointer :: nCellsArray
+
+      call mpas_pool_get_array(forcingPool, 'diurnalCycleFraction', diurnalCycleFraction)
+      call mpas_pool_get_dimension(meshPool, 'nCellsArray', nCellsArray)
+
+      nCells = nCellsArray( size(nCellsArray) )
+
+      !$omp do schedule(runtime)
+      do iCell = 1, nCells
+         arg1 = cos(2.0_r8*pii*(tod - 0.5_r8))
+         diurnalCycleFraction(iCell) = max(arg1,0.0_r8)
+      enddo
+      !$omp end do
+    end subroutine ocn_diurnal_cycle!}}}
 !***********************************************************************
 !
 !  routine ocn_tracer_short_wave_absorption_tend
