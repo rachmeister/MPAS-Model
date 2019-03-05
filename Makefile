@@ -589,6 +589,7 @@ endif
 
 ifeq "$(CVMIX2)" "true"
 	LIBS += -lstdc++ -ldl
+
 endif
 
 ifneq ($(wildcard .mpas_core_*), ) # CHECK FOR BUILT CORE
