@@ -1065,6 +1065,7 @@ contains
       type (mpas_pool_type), intent(in) :: meshPool !< Input: mesh information
       integer, intent(in), optional :: timeLevelIn !< Input: Input time level for state pool
 
+      logical,pointer :: config_use_les_for_vmix
       integer :: iEdge, cell1, cell2, eoe, i, j, k
       integer, pointer :: nEdgesSolve
       real (kind=RKIND), dimension(:), pointer :: fEdge
@@ -1085,6 +1086,7 @@ contains
       call mpas_timer_start("ocn_fuperp")
       call mpas_threading_barrier()
 
+      call mpas_pool_get_config(ocnConfigs, 'config_use_les_for_vmix', config_use_les_for_vmix)
       call mpas_pool_get_array(statePool, 'normalVelocity', normalVelocity, timeLevel)
       call mpas_pool_get_array(statePool, 'normalBaroclinicVelocity', normalBaroclinicVelocity, timeLevel)
 
@@ -1101,6 +1103,7 @@ contains
 
       !DWJ: ADD OMP (Only needed for split explicit)
 
+      if (config_use_les_for_vmix) fEdge(:) = 0.0
       !
       ! Put f*normalBaroclinicVelocity^{perp} in u as a work variable
       !

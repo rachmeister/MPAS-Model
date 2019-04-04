@@ -291,7 +291,6 @@ contains
       call mpas_pool_get_array(forcingPool, 'rainFlux', rainFlux)
 
       nCells = nCellsArray( 3 )
-
       ! Build surface fluxes at cell centers
       !$omp do schedule(runtime)
       do iCell = 1, nCells
