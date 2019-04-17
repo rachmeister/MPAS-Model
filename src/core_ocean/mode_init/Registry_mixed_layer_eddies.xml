@@ -1,0 +1,74 @@
+	<nml_record name="mixed_layer_eddies" mode="init" configuration="mixed_layer_eddies">
+		<nml_option name="config_mixed_layer_eddies_vert_levels" type="integer" default_value="20" units="unitless"
+			description="Number of vertical levels in mixed layer eddies test case. Typical value is 20."
+			possible_values="Any positive integer number greater than 0."
+		/>
+		<nml_option name="config_mixed_layer_eddies_background_stratification" type="real" default_value="16" units="unitless"
+			description="stratification of the interior, given in multiples of the coriolis parameter"
+      possible_values="reals greater than zero"
+		/>
+		<nml_option name="config_mixed_layer_eddies_ML_stratification" type="real" default_value="0" units="unitless"
+			description="stratification of the mixed layer, given in multiples of the coriolis parameter."
+			possible_values="Any real number greater than equal to zero"
+		/>
+		<nml_option name="config_mixed_layer_eddies_horizontal_buoyancy_grad" type="real" default_value="1" units="unitless"
+			description="horizontal buouyancy gradient, multiple of coriolis parameter, b_grad = -(param*f)^2"
+			possible_values="Any real number greater than zero"
+		/>
+		<nml_option name="config_mixed_layer_eddies_bottom_depth" type="real" default_value="300" units="m"
+			description="Depth of the domain"
+      possible_values="Any real number > 0"
+		/>
+		<nml_option name="config_mixed_layer_eddies_frontal_width" type="real" default_value="20" units="unitless"
+			description="width of buoyancy front, given as multiple of grid spacing, dcEdge"
+			possible_values="Any real number greater than 0, greater than 10 recommended"
+		/>
+		<nml_option name="config_mixed_layer_eddies_mixed_layer_depth" type="real" default_value="50" units="m"
+			description="mixed layer depth"
+			possible_values="Any positive real number less than bottom depth"
+		/>
+  <nml_option name="config_mixed_layer_eddies_surface_cooling" type="real" default_value="-20" units="W m^{-2}"
+			description="Surface cooling for the test."
+			possible_values="Any negative real number."
+      />
+    <nml_option name="config_mixed_layer_eddies_windStressZonal" type="real" default_value="0" units="Pa"
+      description="surface zonal windstress"
+      poossible_values="real numbers"
+      />
+     <nml_option name="config_mixed_layer_eddies_windStressMeridional" type="real" default_value="0" units="Pa"
+      description="surface meridional windstress"
+      poossible_values="real numbers"
+      />
+    <nml_option name="config_mixed_layer_eddies_use_shortwave" type="logical" default_value=".false." units="unitless"
+      description="use idealized diurnal cycle, requires surface cooling to be non zero."
+      possible_values=".true. or .false."
+      />
+  <nml_option name="config_mixed_layer_eddies_background_buoyancy" type="real" default_value="3e-3" units="ms^{-2}"
+			description="Background buoyancy value."
+			possible_values="Any real number greater than 0."
+		/>
+		<nml_option name="config_mixed_layer_eddies_coriolis_parameter" type="real" default_value="-1.2e-4" units="s^{-1}"
+			description="Coriolis parameter for entrie domain."
+			possible_values="Any real number."
+      />
+    <nml_option name="config_mixed_layer_eddies_density_0" type="real" default_value="1000.0" units="kgm^{-3}"
+      description="reference density, test case assumes linear EOS."
+      possible_values="real numbers near 1000"
+      />
+    <nml_option name="config_mixed_layer_eddies_alpha" type="real" default_value="2e-4" units="oC^{-1}"
+      description="thermal expansion coefficient, for linear EOS"
+      possible_values="values near 2e-4"
+      />
+    <nml_option name="config_mixed_layer_eddies_beta" type="real" default_value="8e-4" units="PSU^{-1}"
+      description="haline contraction coefficient, for linear EOS"
+      possible_values="values near 8e-4"
+      />
+    <nml_option name="config_mixed_layer_eddies_tref" type="real" default_value="5" units="oC"
+      description="reference temperature for linear EOS."
+      possible_values="reasonable temperature values"
+      />
+    <nml_option name="config_mixed_layer_eddies_sref" type="real" default_value="35" units="PSU"
+      description="reference salinity for linear EOS"
+      possible_values="reasonable salinity values"
+      />
+	</nml_record>

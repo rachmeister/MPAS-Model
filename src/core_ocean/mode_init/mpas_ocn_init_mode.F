@@ -41,6 +41,7 @@ module ocn_init_mode
 
    !use ocn_init_TEMPLATE
    use ocn_init_baroclinic_channel
+   use ocn_init_mixed_layer_eddies
    use ocn_init_lock_exchange
    use ocn_init_internal_waves
    use ocn_init_overflow
@@ -266,6 +267,7 @@ module ocn_init_mode
       call mpas_log_write( ' Generating configuration: ' // trim(config_init_configuration))
 
       call ocn_init_setup_baroclinic_channel(domain, ierr)
+      call ocn_init_setup_mixed_layer_eddies(domain, ierr)
       call ocn_init_setup_lock_exchange(domain, ierr)
       call ocn_init_setup_internal_waves(domain, ierr)
       call ocn_init_setup_overflow(domain, ierr)
@@ -354,6 +356,8 @@ module ocn_init_mode
       end if
 
       call ocn_init_validate_baroclinic_channel(configPool, packagePool, iocontext, iErr=err_tmp)
+      iErr = ior(iErr, err_tmp)
+      call ocn_init_validate_mixed_layer_eddies(configPool, packagePool, iocontext, iErr=err_tmp)
       iErr = ior(iErr, err_tmp)
       call ocn_init_validate_lock_exchange(configPool, packagePool, iocontext, iErr=err_tmp)
       iErr = ior(iErr, err_tmp)

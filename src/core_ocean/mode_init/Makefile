@@ -9,6 +9,7 @@ UTILS = mpas_ocn_init_spherical_utils.o \
 	mpas_ocn_init_ssh_and_landIcePressure.o
 
 TEST_CASES = mpas_ocn_init_baroclinic_channel.o \
+						 mpas_ocn_init_mixed_layer_eddies.o \
              mpas_ocn_init_lock_exchange.o \
              mpas_ocn_init_internal_waves.o \
              mpas_ocn_init_overflow.o \
@@ -44,6 +45,8 @@ mpas_ocn_init_vertical_grids.o:
 mpas_ocn_init_seaSurfaceHeightAndPressure.o:
 
 mpas_ocn_init_baroclinic_channel.o: $(UTILS)
+
+mpas_ocn_init_mixed_layer_eddies.o: $(UTILS)
 
 mpas_ocn_init_iso.o: $(UTILS)
 
