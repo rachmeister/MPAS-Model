@@ -1,14 +1,12 @@
 #!/bin/bash
 
-## CVMix Tag for build
-CVMIX_TAG=v1.1
-## Subdirectory in CVMix repo to use
-CVMIX_SUBDIR=lib
+CVMIX_SUBDIR=cvmixlib
 
 ## Available protocols for acquiring CVMix source code
-CVMIX_GIT_HTTP_ADDRESS=https://gitlab.com/vanroekel/cvmix_modernization.git
-CVMIX_GIT_SSH_ADDRESS=git@gitlab.com:CVMix/cvmix_modernization.git
-CVMIX_SVN_ADDRESS=https://gitlab.com/vanroekel/cvmix_modernization/tags
+CVMIX_GIT_HTTP_ADDRESS=https://gitlab.com/vanroekel/cvmix_modernization
+CVMIX_GIT_SSH_ADDRESS=git@gitlab.com:vanroekel/cvmix_modernization.git
+
+CVMIX_BRANCH=mpas_include
 
 GIT=`which git`
 SVN=`which svn`
@@ -20,14 +18,14 @@ if [ -d cvmix2 ]; then
 
 	if [ -d .cvmix2_all/.git ]; then
 		cd .cvmix2_all
-		CURR_TAG=$(git describe --tags)
+		#CURR_TAG=$(git describe --tags)
 		cd ../
-		if [ "${CURR_TAG}" == "${CVMIX_TAG}" ]; then
-			echo "CVmix2 version is current. Skip update"
-		else
-			unlink cvmix2
-			rm -rf .cvmix2_all
-		fi
+		#if [ "${CURR_TAG}" == "${CVMIX_TAG}" ]; then
+		#	echo "CVmix2 version is current. Skip update"
+		#else
+		#	unlink cvmix2
+		#	rm -rf .cvmix2_all
+		#fi
 	else
 		unlink cvmix2
 		rm -rf .cvmix2_all
@@ -48,31 +46,28 @@ if [ ! -d cvmix2 ]; then
 		git clone ${CVMIX_GIT_SSH_ADDRESS} .cvmix2_all &> /dev/null
 		if [ -d .cvmix2_all ]; then 
 			cd .cvmix2_all 
-			git checkout ${CVMIX_TAG} &> /dev/null
+			git checkout ${CVMIX_BRANCH} &> /dev/null
+			mkdir -p ${CVMIX_SUBDIR}/build
 			cd ../ 
-			ln -sf .cvmix2_all/${CVMIX_SUBDIR} cvmix 
+			ln -sf .cvmix2_all/${CVMIX_SUBDIR} cvmix2 
 		else 
 			git clone ${CVMIX_GIT_HTTP_ADDRESS} .cvmix2_all &> /dev/null
 			PROTOCOL="git http"
 			if [ -d .cvmix2_all ]; then 
 				cd .cvmix2_all 
-				git checkout ${CVMIX_TAG} &> /dev/null
+				git checkout ${CVMIX_BRANCH} &> /dev/null
+				mkdir -p ${CVMIX_SUBDIR}/build
 				cd ../ 
 				ln -sf .cvmix2_all/${CVMIX_SUBDIR} cvmix2 
 			fi 
 		fi 
-	else 
-		echo " ** Using svn to acquire cvmix source. ** "
-		PROTOCOL="svn"
-		svn co ${CVMIX_SVN_ADDRESS}/${CVMIX_TAG} .cvmix2_all &> /dev/null
-		ln -sf .cvmix2_all/${CVMIX_SUBDIR} cvmix2
 	fi 
 fi
 
-if [ -d cvmix2 ]; then
-	cd cvmix2
-	./get_kokkos.sh
-else
+#if [ -d cvmix2 ]; then
+#	cd cvmix2
+#	./get_kokkos.sh
+#else
 	echo " ****************************************************** "
 	echo " ERROR: Build failed to acquire CVMix-Modernization source."
 	echo ""
@@ -88,7 +83,9 @@ else
 		echo " Please use 'ssh -vT git@github.com' to debug issues with ssh keys."
 	elif [ "${PROTOCOL}" == "svn" ]; then
 		echo " This protocol requires having svn proxys setup properly in ~/.subversion/servers."
+	elif [ "${PROTOCOL}" == "wget" ]; then
+		echo " This protocol requires having the http_proxy and https_proxy environment variables"
+		echo " setup properly for your shell."
 	fi
 	echo ""
 	echo " ****************************************************** "
-fi
