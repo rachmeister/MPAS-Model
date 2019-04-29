@@ -89,7 +89,7 @@ clean:
 		(cd cvmix; make clean) \
 	fi
 	if [ -d cvmix_kokkos ]; then \
-		(cd cvmix_kokkos; make clean) \
+		(cd cvmix_kokkos; rm -rf build) \
 	fi
 	if [ -d inc ]; then \
 		($(RM) -r inc) \
